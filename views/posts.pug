@@ -1,0 +1,22 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to the Family
+    ul
+      each post, i in posts
+        li.list-group-item
+          a(href="/posts/"+post._id)= post.title
+    br
+    br
+    if user    
+      h1 Add Post
+      form(method='POST', action='/posts')
+        #form-group
+          label Title:
+          input.form-control(name='title', type='text')
+        #form-group
+          label Description:
+          input.form-control(name='body', type='text')
+        br
+        input.btn.btn-outline-success(type='submit',value='Submit')

@@ -1,0 +1,14 @@
+extends layout
+
+block content
+    h1= title
+
+    form(method='POST', action='/posts/edit/'+post._id)
+      #form-group
+        label Title:
+        input.form-control(name='title', type='text' value=post.title)
+      #form-group
+        label Description:
+        input.form-control(name='body', type='text' value=post.body)
+      br
+      input.btn.btn-outline-success(type='submit',value='Submit')

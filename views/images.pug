@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1 Let's Laugh
+  h5
+    a(href='./add') Add Images
+   
+  .container-fluid
+    .row
+      each image, i in images
+        .col-md-3(style='padding: 0px')
+          <img src=#{image.src} , alt=#{image.description} , style="width:100%">
+    

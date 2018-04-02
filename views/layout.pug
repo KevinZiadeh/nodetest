@@ -1,0 +1,44 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet" href="/bootstrap/css/bootstrap.css" )
+    
+  body(style='padding: 0px')
+    nav.navbar.navbar-expand-md.bg-dark.navbar-dark
+      a.navbar-brand(href='/') Nodetest
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#collapsibleNavbar')
+        span.navbar-toggler-icon
+      #collapsibleNavbar.collapse.navbar-collapse
+        ul.navbar-nav
+          li.nav-item
+            a.nav-link(href='/') Home
+          if user 
+            li.nav-item
+              a.nav-link(href='/images') Images
+        ul.navbar-nav.ml-md-auto
+          if user
+            li.nav-item
+              a.nav-link(href='/users/logout') Logout
+          else  
+            li.nav-item
+              a.nav-link(href='/users/register') Register
+            li.nav-item
+              a.nav-link(href='/users/login') Login
+
+            
+    .container
+      != messages('message', locals)
+      if errors
+        each error, i in errors
+          div(class='alert alert-danger') #{error.msg}
+      block content
+      br  
+      hr
+      footer  
+        p Copyright &copy; Kevin Ziadeh 2018
+
+  script(src="/jquery/jquery.js")
+  script(src="/bootstrap/js/bootstrap.js")
+  script(src="/javascripts/delete.js")

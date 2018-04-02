@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  .jumbotron  
+    h1= post.title
+    h2 Description: 
+      p.description #{post.body}
+    h4 Date created: #{post.date}
+    if user 
+      h5 #{author}
+    hr
+  if user
+    if user.id == post.author
+      a.btn.btn-outline-primary(href='/posts/edit/'+post._id style='margin-right: 20px') Edit
+      a.btn.btn-danger.delete-user(href='/posts/'+post._id data-id=post._id) Delete
