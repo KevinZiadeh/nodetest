@@ -14,9 +14,19 @@ block content
         input.form-control(name='username', type='text')
       #form-group
         label Password:
-        input.form-control(name='password', type='password')
+        input.form-control(name='password', type='password', id='password')
+        .alert.alert-warning.pswrdRequirements(style="display: none")
+          p Password should at least :
+            ul
+              li Contain one letter
+              li Contain one number
+              li Contain one symbol ~<>?!@#$%^&*()
+              li Be 6 at least six letters
+        .progress
+          .progress-bar(role="progressbar", max='100', style='width: 0%', id='pswrdStrength')
       #form-group
         label Confirm Password:
         input.form-control(name='password2', type='password')
     br
-    input.btn.btn-outline-success(type='submit',value='Submit')
+    input.btn.btn-success.register-button(id="register-button" type='submit',value='Submit')
+    <div class="click">Click me to Dhisa</div>

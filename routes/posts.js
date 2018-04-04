@@ -104,24 +104,6 @@ router.post('/edit/:id', (req, res) => {
 });
 
 
-//Get Single post
-router.get('/:id', function(req, res){
-  Post.findById(req.params.id, (err, post) => {
-    User.findById(post.author, (err, user) => {
-      if(err){
-        console.log(err);
-      } else{
-        res.render('post', {
-          title: post.title,
-          author: user.name,
-          post: post
-        })
-      }
-    })
-  })
-})
-
-
 // Delete User
 router.delete('/:id', function(req, res){
   if(!req.user._id){
@@ -143,6 +125,20 @@ router.delete('/:id', function(req, res){
     }
   });
 });
+
+
+//Get Single post
+router.get('/:id', function(req, res){
+  Post.findById(req.params.id, (err, post) => {
+    User.findById(req.user._id, (err, user) => {
+        res.render('post', {
+          title: 'Post by ' +user.name,
+          author: user.name,
+          post: post
+        })
+      })
+    })
+  })
 
 
 // Access Control

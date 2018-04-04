@@ -34,7 +34,8 @@ router.post('/register', (req, res) => {
 
   if(errors){
    res.render('register', {
-     errors:errors
+     errors:errors,
+     title: 'Register'
    });
  } else {
      let newUser = new User({
