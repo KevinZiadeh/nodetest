@@ -7,7 +7,7 @@ module.exports = function(passport){
   // Local Strategy
   passport.use(new LocalStrategy(function(username, password, done){
     // Match Username
-    let query = (username.indexOf('@') === -1) ? {username: username} : {email: username};
+    let query = (username.indexOf('@') === -1) ? {username: username.toLowerCase()} : {email: username.toLowerCase()};
     User.findOne(query, function(err, user){
       if(err) throw err;
       if(!user){
