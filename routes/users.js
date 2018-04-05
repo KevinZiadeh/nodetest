@@ -95,4 +95,86 @@ router.get('/logout', function(req, res){
 });
 
 
+// Edit information
+// GET request
+router.get('/edit/:id', ensureAuthenticated, function(req, res){
+  User.findById(req.user._id, (err, user) => {
+    res.render('edit_user', {
+      title: 'Edit User',
+      user: user
+    })
+  })
+});
+
+//POST request
+router.post('/edit/:id', ensureAuthenticated, (req, res) => {
+  const name = req.body.name;
+  const email = req.body.email;
+  const username = req.body.username;
+  const oldpassword = req.body.oldpassword;
+  const newpassword = req.body.newpassword;
+  const newpassword2 = req.body.newpassword2;
+
+  req.checkBody('name','Name is required').notEmpty();
+  req.checkBody('email','Email is required').notEmpty();
+  req.checkBody('email','Email is not valid').isEmail();
+  req.checkBody('username','Username is required').notEmpty();
+  //req.checkBody('oldpassword','Old password is not correct').equals(req.user.password);
+  req.checkBody('newpassword','Password is required').notEmpty();
+  req.checkBody('newpassword2','Passwords do not match').equals(req.body.newpassword);
+
+  //Get Errors
+  let errors = req.validationErrors();
+
+    if(errors){
+      User.findById(req.user.id, (err, user) => {
+        if (err) {
+          console.log(err)
+        } else{
+          res.render('edit_user', {
+            title: 'Edit Information',
+            user: user,
+            errors:errors
+          });
+        }
+      })
+    } else {
+       let user = {};
+       user.name = name;
+       user.email = email.toLowerCase();
+       user.username = username.toLowerCase();
+       user.password = newpassword;
+         bcrypt.genSalt(10, function(err, salt){
+           bcrypt.hash(user.password, salt, function(err, hash){
+             if(err){
+               console.log(err);
+             }
+             user.password = hash
+
+           let query = {_id: req.params.id}
+
+           User.update(query, user, (err, user) => {
+             if(err){
+               console.log(err);
+               return
+             } else{
+               req.flash('success','User Updated');
+               res.redirect('/');
+             }
+           })
+         })
+       })
+     }
+   })
+
+
+// Access Control
+function ensureAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    req.flash('danger', 'Please login');
+    res.redirect('/users/login');
+  }
+}
 module.exports = router;

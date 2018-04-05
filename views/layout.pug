@@ -20,6 +20,9 @@ html
         ul.navbar-nav.ml-md-auto
           if user
             li.nav-item
+              a.nav-link(href='/users/edit/'+user._id)
+                i.fas.fa-user-circle.fa-lg
+            li.nav-item
               a.nav-link(href='/users/logout') Logout
           else  
             li.nav-item
@@ -43,3 +46,4 @@ html
   script(src="/bootstrap/js/bootstrap.js")
   script(src="/javascripts/delete.js")
   script(src="/javascripts/password.js")
+  script(defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous")
