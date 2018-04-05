@@ -23,7 +23,7 @@ $('#password').on('keyup', (event) => {
     if (password.match(/[~<>?]+/)) {
         strength += 1
     }
-    if (password.match(/[!@#$%^&*()]+/)) {
+    if (password.match(/[!@#$%^&*()-]+/)) {
         strength += 1
     }
     if (password.length > 5) {
