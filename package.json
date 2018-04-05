@@ -11,6 +11,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "~1.18.2",
+    "bootstrap": "^4.0.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
@@ -28,7 +29,7 @@
     "multer-gridfs-storage": "^3.0.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "pug": "~1.11.0",
+    "pug": "^2.0.3",
     "serve-favicon": "~2.4.5"
   }
 }
