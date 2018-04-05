@@ -82,25 +82,44 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   })
 });
 
-//Add POST request
+// POST request
 router.post('/edit/:id', (req, res) => {
+  req.checkBody('title','Title is required').notEmpty();
+  req.checkBody('body','Description is required').notEmpty();
 
-  let post = {};
-  post.title = req.body.title;
-  post.body = req.body.body;
-  post.date = new Date().toDateString();
+  //Get Errors
+  let errors = req.validationErrors();
+  
+  if(errors){
+    Post.find({}, function(err, posts){
+      if(err){
+        console.log(err)
+      } else{
+        res.render('posts', {
+          title: 'Post List',
+          posts: posts,
+          errors: errors
+        });
+      }
+    });
+  } else {
+      let post = {};
+      post.title = req.body.title;
+      post.body = req.body.body;
+      post.date = new Date().toDateString();
 
-  let query = {_id: req.params.id}
+      let query = {_id: req.params.id}
 
-  Post.update(query, post, (err, post) => {
-    if(err){
-      console.log(err);
-      return
-    } else{
-      req.flash('success','Post Updated');
-      res.redirect('/posts/'+req.params.id);
+      Post.update(query, post, (err, post) => {
+        if(err){
+          console.log(err);
+          return
+        } else{
+          req.flash('success','Post Updated');
+          res.redirect('/posts/'+req.params.id);
+        }
+      })
     }
-  })
 });
 
 
