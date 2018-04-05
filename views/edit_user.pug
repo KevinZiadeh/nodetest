@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  h1 Edit Account information
+  h4 Please enter all fields
+  form(method='POST', action='/users/edit/'+user._id)
+    #form-group
+      label Name:
+      input.form-control(name='name', type='text', placeholder=user.name)
+    #form-group
+      label Email:
+      input.form-control(name='email', type='text', placeholder=user.email)
+      #form-group
+        label Username:
+        input.form-control(name='username', type='text', placeholder=user.username)
+      #form-group
+        label Old Password:
+        input.form-control(name='oldpassword', type='password')
+      #form-group
+        label New Password:
+        input.form-control(name='newpassword', type='password', id='password')
+        .alert.alert-warning.pswrdRequirements(style="display: none")
+          p Password should at least :
+            ul
+              li Contain one letter
+              li Contain one number
+              li Contain one symbol ~<>?!@#$%^&*()-
+              li Be 6 at least six letters
+        .progress
+          .progress-bar(role="progressbar", max='100', style='width: 0%', id='pswrdStrength')
+      #form-group
+        label Confirm New Password:
+        input.form-control(name='newpassword2', type='password')
+    br
+    input.btn.btn-success(id='register-button' type='submit', value='Submit')
