@@ -1,4 +1,3 @@
-fix old password recognition
 add different login methods
 add automatic email sending
 add upload files
