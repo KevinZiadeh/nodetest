@@ -119,53 +119,64 @@ router.post('/edit/:id', ensureAuthenticated, (req, res) => {
   req.checkBody('email','Email is required').notEmpty();
   req.checkBody('email','Email is not valid').isEmail();
   req.checkBody('username','Username is required').notEmpty();
-  //req.checkBody('oldpassword','Old password is not correct').equals(req.user.password);
   req.checkBody('newpassword','Password is required').notEmpty();
   req.checkBody('newpassword2','Passwords do not match').equals(req.body.newpassword);
 
-  //Get Errors
-  let errors = req.validationErrors();
 
-    if(errors){
-      User.findById(req.user.id, (err, user) => {
-        if (err) {
-          console.log(err)
-        } else{
-          res.render('edit_user', {
-            title: 'Edit Information',
-            user: user,
-            errors:errors
-          });
-        }
-      })
-    } else {
-       let user = {};
-       user.name = name;
-       user.email = email.toLowerCase();
-       user.username = username.toLowerCase();
-       user.password = newpassword;
-         bcrypt.genSalt(10, function(err, salt){
-           bcrypt.hash(user.password, salt, function(err, hash){
-             if(err){
-               console.log(err);
-             }
-             user.password = hash
+  // Match Password
+  User.findById(req.user._id, (err, user) => {
+    bcrypt.compare(oldpassword, user.password, function(err, isMatch){
+      if(err) throw err;
+      if(isMatch){
+        //Get Errors
+        let errors = req.validationErrors();
 
-           let query = {_id: req.params.id}
+          if(errors){
+            User.findById(req.user._id, (err, user) => {
+              if (err) {
+                console.log(err)
+              } else{
+                res.render('edit_user', {
+                  title: 'Edit Information',
+                  user: user,
+                  errors:errors
+                });
+              }
+            })
+          } else {
+             let user = {};
+             user.name = name;
+             user.email = email.toLowerCase();
+             user.username = username.toLowerCase();
+             user.password = newpassword;
+               bcrypt.genSalt(10, function(err, salt){
+                 bcrypt.hash(user.password, salt, function(err, hash){
+                   if(err){
+                     console.log(err);
+                   }
+                   user.password = hash
 
-           User.update(query, user, (err, user) => {
-             if(err){
-               console.log(err);
-               return
-             } else{
-               req.flash('success','User Updated');
-               res.redirect('/');
-             }
-           })
-         })
-       })
-     }
-   })
+                 let query = {_id: req.params.id}
+
+                 User.update(query, user, (err, user) => {
+                   if(err){
+                     console.log(err);
+                     return
+                   } else{
+                     req.flash('success','User Updated');
+                     res.redirect('/');
+                   }
+                 })
+               })
+             })
+           }
+      } else {
+        req.flash('danger','Old password is incorrect');
+        res.redirect('/users/edit/'+user.id);
+      }
+    })
+  })
+})
 
 
 // Access Control
