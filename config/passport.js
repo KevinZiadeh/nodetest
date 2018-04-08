@@ -1,7 +1,10 @@
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/user');
 const config = require('../config/database');
 const bcrypt = require('bcryptjs');
+const FacebookStrategy = require('passport-facebook').Strategy;
+
+//Bring in models
+let User = require('../models/user');
 
 module.exports = function(passport){
   // Local Strategy
@@ -26,6 +29,21 @@ module.exports = function(passport){
     });
   }));
 
+
+  //Facebook Strategy
+  passport.use(new FacebookStrategy({
+  clientID: 443385299449892,
+  clientSecret: '44d27f6f7874696906668ef248372dbd',
+  callbackURL: "http://localhost:3000/users/login/facebook/return"
+},
+function(accessToken, refreshToken, profile, done) {
+User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+return done(err, user);
+});
+}
+));
+
+
   passport.serializeUser(function(user, done) {
     done(null, user.id);
   });
@@ -35,4 +53,5 @@ module.exports = function(passport){
       done(err, user);
     });
   });
+
 }

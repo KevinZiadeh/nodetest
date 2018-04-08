@@ -70,6 +70,7 @@ router.post('/register', (req, res) => {
 
 
 //Login page
+//Local Strategy
 //GET request
 router.get('/login', (req, res) => {
   res.render('login', {
@@ -85,6 +86,17 @@ router.post('/login', (req, res, next) => {
     failureFlash: true
   })(req, res, next)
 })
+
+
+//Facebook Strategy
+router.get('/login/facebook',
+  passport.authenticate('facebook'));
+
+router.get('/login/facebook/return',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
 
 
 // logout
