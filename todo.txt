@@ -1,4 +1,3 @@
-add automatic email sending
 add upload files
 add accnt verification by Email
 add password reset
