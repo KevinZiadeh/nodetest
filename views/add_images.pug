@@ -3,15 +3,10 @@ extends layout
 block content
 
   h1 #{title}
-  form(method='POST', action='/images', enctype='multipart/form-data')
-    #form-group
-      label Description:
-      input.form-control(name='description', type='text')
-    #form-group
-      label Uploader:
-      input.form-control(name='uploader', type='text')
-    #form-group
-      label File:
-      input.form-control(name='file', type='file')
-    br
-    input.btn.btn-primary.btn-block(type='submit',value='Submit')
+  .custom-file.mb-3
+    form(method='POST', action='/images/upload', enctype='multipart/form-data')
+      #form-group
+        label(for='file') Choose file:
+        input.form-control(name='file', type='file', id="file")
+      br
+      input.btn.btn-primary.btn-block(type='submit',value='Submit')

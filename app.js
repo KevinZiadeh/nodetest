@@ -88,53 +88,16 @@ app.get('*', function(req, res, next){
 });
 
 
-// Init gfs
-let gfs;
 
 //MongoDb connection
 
 mongoose.connect(config.database);
 let db = mongoose.connection;
 
-// Check connection
-db.once('open', () => {
-  console.log('Connected to MongoDB');
-  //Init Stream
-  gfs = Grid(db.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
-
 // Check for DB errors
 db.on('error', function(err){
   console.log(err);
 });
-
-
-//MongoDb connection
-
-
-
-// Create storage engine
-const storage = new GridFsStorage({
-  url: config.database,
-  file: (req, file) => {
-    return new Promise((resolve, reject) => {
-      crypto.randomBytes(8, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString('hex') + path.extname(file.originalname);
-        const fileInfo = {
-          filename: filename,
-          bucketName: 'uploads'
-        };
-        resolve(fileInfo);
-      });
-    });
-  }
-});
-const upload = multer({ storage });
-
 
 
 

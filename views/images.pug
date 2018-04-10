@@ -3,11 +3,16 @@ extends layout
 block content
   h1 Let's Laugh
   h5
-    a(href='./add') Add Images
+    a(href='./upload') Upload Images
    
   .container-fluid
+    h4= text
     .row
-      each image, i in images
-        .col-md-3(style='padding: 0px')
-          <img src=#{image.src} , alt=#{image.description} , style="width:100%">
-    
+      each file, i in files
+        .col-md-4(style='padding: 3px')
+          <a href='image/#{file.filename}'>
+            <img src='image/#{file.filename}', style="width:100%">
+          </a>
+          <form method="POST" action="image/#{file._id}?_method=DELETE">
+            <button class="btn btn-danger btn-block mt-4">Delete</button>
+          </form>
