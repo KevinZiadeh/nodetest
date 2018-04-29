@@ -151,41 +151,6 @@ router.post('/register', (req, res) => {
         });
     }
   } */
-      /*   newUser.save(function(err){
-           if(err){
-             console.log(err);
-             req.flash('error','Email/Username already taken');
-             res.render('register', {
-               title: 'Register'
-             });
-             return;
-           } else {
-             req.flash('success','You are now registered and can log in');
-             res.redirect('/users/login');
-             var transporter = nodemailer.createTransport({
-              service: 'gmail',
-              auth: {
-                user: 'kevinziadeh@gmail.com',
-                pass: '26-11Zkevin'
-              }
-            });
-
-            var mailOptions = {
-              from: 'Kevin Ziadeh kevinziadeh@gmail.com',
-              to: email,
-              subject: 'Welcome to the Family!',
-              html: '<h1>Welcome</h1><p>That was easy!</p>',
-            };
-
-            transporter.sendMail(mailOptions, function(err, info){
-              if (err) {
-                console.log(err);
-              } else {
-                console.log('Email sent: ' + info.response);
-              }
-            });
-           }
-         }); */
        });
      });
    }
