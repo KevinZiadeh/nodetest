@@ -103,8 +103,9 @@ router.post('/register', (req, res) => {
 
             // user already exists in persistent collection
             if (existingPersistentUser) {
-                return res.json({
-                    msg: 'You have already signed up and confirmed your account. Did you forget your password?'
+                req.flash('error','Email is already taken');
+                res.render('register', {
+                  title: 'Register'
                 });
             }
 
@@ -116,16 +117,18 @@ router.post('/register', (req, res) => {
                     if (err) {
                         return res.status(404).send('ERROR: sending verification email FAILED');
                     }
-                    res.json({
-                        msg: 'An email has been sent to you. Please check it to verify your account.',
-                        info: info
+                    res.render('email_Verification', {
+                      title: 'Registration',
+                      msg: 'An email has been sent to you. Please check it to verify your account.',
+                      info: info
                     });
                 });
 
                 // user already exists in temporary collection!
             } else {
-                res.json({
-                    msg: 'You have already signed up. Please check your email to verify your account.'
+                res.render('email_Verification', {
+                  title: 'Registration',
+                  msg: 'You have already signed up. Please check your email to verify your account.'
                 });
             }
         })
@@ -202,7 +205,8 @@ router.get('/email-verification/:URL', function(req, res) {
                 res.redirect('/users/login');
             });
         } else {
-            return res.status(404).send('ERROR: confirming temp user FAILED');
+          req.flash('error','Username is already taken');
+          res.redirect('/users/register');
         }
     });
 })
