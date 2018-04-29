@@ -3,9 +3,54 @@ var router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const nodemailer = require('nodemailer')
+const mongoose = require('mongoose');
+const nev = require('email-verification')(mongoose);
+const config = require('../config/database');
+
+mongoose.connect(config.database);
 
 //Bring in models
 let User = require('../models/user.js')
+
+//verification email Config
+nev.configure({
+    verificationURL: 'http://localhost:3000/users/email-verification/${URL}',
+    persistentUserModel: User,
+    tempUserCollection: 'nodetest_tempusers',
+
+    transportOptions: {
+        service: 'gmail',
+        auth: {
+            user: 'kevinziadeh@gmail.com',
+            pass: '26-11Zkevin'
+        }
+    },
+    verifyMailOptions: {
+        from: 'Do Not Reply <no_reply@outlook.com>',
+        subject: 'Please confirm account',
+        html: 'Click the following link to confirm your account:</p><p>${URL}</p>',
+        text: 'Please confirm your account by clicking the following link: ${URL}'
+    },
+    shouldSendConfirmation: true,
+    confirmMailOptions: {
+    from: 'Do Not Reply <user@gmail.com>',
+    subject: 'Successfully verified!',
+    html: '<p>Your account has been successfully verified.</p>',
+    text: 'Your account has been successfully verified.'
+    },
+}, function(error, options){
+});
+
+// generating the model, pass the User model defined earlier
+nev.generateTempUserModel(User, function(err, tempUserModel) {
+    if (err) {
+        console.log(err);
+        return;
+    }
+
+    console.log('generated temp user model: ' + (typeof tempUserModel === 'function'));
+});
+
 
 //User Registeration
 //Get request
@@ -51,7 +96,59 @@ router.post('/register', (req, res) => {
            console.log(err);
          }
          newUser.password = hash;
-         newUser.save(function(err){
+         nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
+            if (err) {
+                return res.status(404).send('ERROR: creating temp user FAILED');
+            }
+
+            // user already exists in persistent collection
+            if (existingPersistentUser) {
+                return res.json({
+                    msg: 'You have already signed up and confirmed your account. Did you forget your password?'
+                });
+            }
+
+            // new user created
+            if (newTempUser) {
+                var URL = newTempUser[nev.options.URLFieldName];
+
+                nev.sendVerificationEmail(email, URL, function(err, info) {
+                    if (err) {
+                        return res.status(404).send('ERROR: sending verification email FAILED');
+                    }
+                    res.json({
+                        msg: 'An email has been sent to you. Please check it to verify your account.',
+                        info: info
+                    });
+                });
+
+                // user already exists in temporary collection!
+            } else {
+                res.json({
+                    msg: 'You have already signed up. Please check your email to verify your account.'
+                });
+            }
+        })
+
+        // resend verification button was clicked
+     /*} else {
+        nev.resendVerificationEmail(email, function(err, userFound) {
+            if (err) {
+                return res.status(404).send('ERROR: resending verification email FAILED');
+            }
+            if (userFound) {
+                res.json({
+                    msg: 'An email has been sent to you, yet again. Please check it to verify your account.'
+                });
+            }
+            else {
+                res.json({
+                    msg: 'Your verification code has expired. Please sign up again.'
+                });
+        });
+    }
+  } */
+      /*   newUser.save(function(err){
            if(err){
              console.log(err);
              req.flash('error','Email/Username already taken');
@@ -85,11 +182,33 @@ router.post('/register', (req, res) => {
               }
             });
            }
-         });
+         }); */
        });
      });
    }
 })
+
+// user accesses the link that is sent
+router.get('/email-verification/:URL', function(req, res) {
+    var url = req.params.URL;
+
+    nev.confirmTempUser(url, function(err, user) {
+        if (user) {
+            nev.sendConfirmationEmail(user.email, function(err, info) {
+                if (err) {
+                    return res.status(404).send('ERROR: sending confirmation email FAILED');
+                }
+                res.json({
+                    msg: 'CONFIRMED!',
+                    info: info
+                });
+            });
+        } else {
+            return res.status(404).send('ERROR: confirming temp user FAILED');
+        }
+    });
+})
+
 
 
 //Login page
