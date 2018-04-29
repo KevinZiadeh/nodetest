@@ -3,11 +3,11 @@ $(document).ready(function(){
   var button = $('#register-button');
   $(button).prop('disabled', true);
 
-$('#password').click(function(){
+$('#password').focus(function(){
   $('.pswrdRequirements').show(400);
 });
 
-$('#password').mouseout(function(){
+$('#password').blur(function(){
   $('.pswrdRequirements').hide(400);
 });
 
