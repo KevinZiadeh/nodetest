@@ -2,3 +2,8 @@ extends layout
 
 block content
   h1= msg
+  h4
+    form(method='POST', action='/users/resend')
+      label Resend verificarion email
+      input.form-control(name='email', type='text', id='email')
+      input.btn.btn-success(type='submit',value='Submit')

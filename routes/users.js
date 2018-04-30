@@ -98,7 +98,8 @@ router.post('/register', (req, res) => {
          newUser.password = hash;
          nev.createTempUser(newUser, function(err, existingPersistentUser, newTempUser) {
             if (err) {
-                return res.status(404).send('ERROR: creating temp user FAILED');
+              req.flash('error','Username is already taken');
+              res.redirect('/users/register');
             }
 
             // user already exists in persistent collection
@@ -132,29 +133,36 @@ router.post('/register', (req, res) => {
                 });
             }
         })
-
-        // resend verification button was clicked
-     /*} else {
-        nev.resendVerificationEmail(email, function(err, userFound) {
-            if (err) {
-                return res.status(404).send('ERROR: resending verification email FAILED');
-            }
-            if (userFound) {
-                res.json({
-                    msg: 'An email has been sent to you, yet again. Please check it to verify your account.'
-                });
-            }
-            else {
-                res.json({
-                    msg: 'Your verification code has expired. Please sign up again.'
-                });
-        });
-    }
-  } */
-       });
-     });
+       })
+     })
    }
 })
+
+// resend verification button was clicked
+router.post('/resend', (req, res) => {
+  const email = req.body.email
+  nev.resendVerificationEmail(email, function(err, userFound) {
+    if (err) {
+      res.render('email_Verification', {
+        title: 'Registration',
+        msg: 'Resending verification email failed.'
+      });
+    }
+    if (userFound) {
+      res.render('email_Verification', {
+        title: 'Registration',
+        msg: 'An email has been sent to you, yet again. Please check it to verify your account.'
+      });
+    }
+    else {
+      res.render('email_Verification', {
+        title: 'Registration',
+        msg: 'Your verification code has expired. Please sign up again.'
+      })
+    }
+  })
+})
+
 
 // user accesses the link that is sent
 router.get('/email-verification/:URL', function(req, res) {
