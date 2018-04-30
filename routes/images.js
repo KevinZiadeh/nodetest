@@ -7,11 +7,8 @@ const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const path = require('path');
 const mongoose = require('mongoose');
-
 const config = require('../config/database');
 
-
-mongoose.connect(config.database);
 let db = mongoose.connection;
 
 // Check connection
@@ -86,7 +83,6 @@ router.get('/image/:filename', (req, res) => {
     // Check if image
     if (file.contentType === 'image/jpeg' || file.contentType === 'image/png') {
       // Read output to browser
-      console.log('file ok');
       const readstream = gfs.createReadStream(file.filename);
       readstream.pipe(res);
     } else {

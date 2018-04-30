@@ -91,7 +91,9 @@ app.get('*', function(req, res, next){
 
 //MongoDb connection
 
-mongoose.connect(config.database);
+mongoose.connect(config.database, {
+  useMongoClient: true,
+});
 let db = mongoose.connection;
 
 // Check for DB errors

@@ -7,8 +7,6 @@ const mongoose = require('mongoose');
 const nev = require('email-verification')(mongoose);
 const config = require('../config/database');
 
-mongoose.connect(config.database);
-
 //Bring in models
 let User = require('../models/user.js')
 
@@ -47,7 +45,6 @@ nev.generateTempUserModel(User, function(err, tempUserModel) {
         console.log(err);
         return;
     }
-
     console.log('generated temp user model: ' + (typeof tempUserModel === 'function'));
 });
 
