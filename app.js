@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const passport = require('passport');
 const crypto = require('crypto'); //
 const multer = require('multer'); // primarily used for uploading files
@@ -47,7 +48,8 @@ app.use(methodOverride('_method'));
 app.use(session({
   secret: 'keyboard cat',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
 // Express Messages Middleware
