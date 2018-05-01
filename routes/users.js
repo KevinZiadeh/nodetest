@@ -169,13 +169,8 @@ router.get('/email-verification/:URL', function(req, res) {
 
     nev.confirmTempUser(url, function(err, user) {
         if (user) {
-            nev.sendConfirmationEmail(user.email, function(err, info) {
-                if (err) {
-                    return res.status(404).send('ERROR: sending confirmation email FAILED');
-                }
-                req.flash('success','You are now registered and can log in');
-                res.redirect('/users/login');
-            });
+            req.flash('success','You are now registered and can log in');
+            res.redirect('/users/login');
         } else {
           req.flash('error','Username is already taken');
           res.redirect('/users/register');
