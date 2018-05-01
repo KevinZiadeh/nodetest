@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-  var button = $('#register-button');
+  var button = $('#submit-button');
   $(button).prop('disabled', true);
 
 $('#password').focus(function(){

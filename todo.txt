@@ -1,1 +1,2 @@
-add password reset
+remove my creedentials
+add date of account creation

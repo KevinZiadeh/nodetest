@@ -24,7 +24,9 @@ const UserSchema = mongoose.Schema({
     required: true
   },
   created_at: Date,
-  updated_at: Date
+  updated_at: Date,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 // Apply the uniqueValidator plugin to userSchema.

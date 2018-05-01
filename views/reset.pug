@@ -3,11 +3,20 @@ extends layout
 block content
   form(method='POST')
     legend Reset Password
-    .form-group
+    #form-group
       label(for='password') New Password
-      input.form-control(type='password', name='password', value='', placeholder='New password', autofocus=true)
-    .form-group
+      input.form-control(type='password', name='password', placeholder='New password', id='password', autofocus=true)
+      .alert.alert-warning.pswrdRequirements(style="display: none")
+        p Password should at least :
+          ul
+            li Contain one letter
+            li Contain one number
+            li Contain one symbol ~<>?!@#$%^&*()
+            li Be 6 at least six letters
+      .progress
+        .progress-bar(role="progressbar", max='100', style='width: 0%', id='pswrdStrength')
+    #form-group
       label(for='confirm') Confirm Password
       input.form-control(type='password', name='confirm', value='', placeholder='Confirm password')
-    .form-group
-      button.btn.btn-primary(type='submit') Update Password
+    #form-group
+      button.btn.btn-primary(id='submit-button', type='submit') Update Password
