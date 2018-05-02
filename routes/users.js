@@ -8,6 +8,7 @@ const nev = require('email-verification')(mongoose);
 const async = require('async');
 const crypto = require('crypto');
 const config = require('../config/database');
+const admin = require('../config/admin');
 
 //Bring in models
 let User = require('../models/user.js')
@@ -21,8 +22,8 @@ nev.configure({
     transportOptions: {
         service: 'gmail',
         auth: {
-            user: 'kevinziadeh@gmail.com',
-            pass: '26-11Zkevin'
+            user: admin.email,
+            pass: admin.pass
         }
     },
     verifyMailOptions: {
@@ -87,7 +88,8 @@ router.post('/register', (req, res) => {
        name:name,
        email:email.toLowerCase(),
        username:username.toLowerCase(),
-       password:password
+       password:password,
+       created_at: new Date()
      });
      bcrypt.genSalt(10, function(err, salt){
        bcrypt.hash(newUser.password, salt, function(err, hash){
@@ -272,6 +274,7 @@ router.post('/edit/:id', ensureAuthenticated, (req, res) => {
              user.email = email.toLowerCase();
              user.username = username.toLowerCase();
              user.password = newpassword;
+             updated_at = new Date()
                bcrypt.genSalt(10, function(err, salt){
                  bcrypt.hash(user.password, salt, function(err, hash){
                    if(err){
@@ -336,13 +339,13 @@ router.post('/forgot', function(req, res, next) {
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'kevinziadeh@gmail.com',
-          pass: '26-11Zkevin'
+          user: admin.email,
+          pass: admin.pass
         }
       });
       var mailOptions = {
         to: user.email,
-        from: 'kevinziadeh@gmail.com',
+        from: admin.email,
         subject: 'Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
@@ -421,13 +424,13 @@ router.post('/reset/:token', function(req, res) {
           var transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-              user: 'kevinziadeh@gmail.com',
-              pass: '26-11Zkevin'
+              user: admin.email,
+              pass: admin.pass
             }
           });
           var mailOptions = {
             to: user.email,
-            from: 'kevinziadeh@gmail.com',
+            from: admin.email,
             subject: 'Your password has been changed',
             text: 'Hello,\n\n' +
             'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
