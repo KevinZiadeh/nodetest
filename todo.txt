@@ -1,2 +1,1 @@
-remove my creedentials
-add date of account creation
+add different pages
