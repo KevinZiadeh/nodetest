@@ -4,7 +4,9 @@
   "description": "Simple knowledgebase app",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www",
+    "run": "nodemon ./bin/www",
+    "debug": "DEBUG=express* node app.js"
   },
   "author": "Kevin Ziadeh",
   "license": "ISC",
@@ -36,5 +38,8 @@
     "passport-local": "^1.0.0",
     "pug": "^2.0.3",
     "serve-favicon": "~2.4.5"
+  },
+  "engines": {
+    "node": "8.11.2"
   }
 }
